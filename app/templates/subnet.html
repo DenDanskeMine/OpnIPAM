@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Subnet {{ subnet.cidr }}</h1>
+    <a href="{{ url_for('add_ip') }}" class="btn btn-primary mb-4">Add IP Address</a>
+    <button onclick="pingSubnet({{ subnet.id }})" class="btn btn-dark mb-4">Ping Subnet</button>
+    <button onclick="discoverIPs({{ subnet.id }})" class="btn btn-dark mb-4">Discover IPs</button>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>IP Address</th>
+                <th>Hostname</th>
+                <th>MAC</th>
+                <th>Description</th>
+                <th>Rack</th>
+                <th>Device</th>
+                <th>Port</th>
+                <th>OS</th>
+                <th>Last User</th>
+                <th>Last Seen</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ip in ips %}
+            <tr>
+                <td><span class="badge {% if ip.is_active %}badge-success{% else %}badge-danger{% endif %}">{{ ip.is_active }}</span></td>
+                <td>{{ ip.ip_address }}</td>
+                <td>{{ ip.hostname }}</td>
+                <td>{{ ip.mac_address }}</td>
+                <td>{{ ip.description }}</td>
+                <td>{{ ip.rack }}</td>
+                <td>{{ ip.device }}</td>
+                <td>{{ ip.port }}</td>
+                <td>{{ ip.os }}</td>
+                <td>{{ ip.last_user }}</td>
+                <td>{{ ip.last_seen }}</td>
+                <td>
+                    <a href="{{ url_for('edit_ip', ip_id=ip.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <button onclick="pingIP({{ ip.id }})" class="btn btn-info btn-sm">Ping</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="pingResult"></div>
+</div>
+<script>
+    async function pingIP(ipId) {
+        const response = await fetch(`/ping_ip/${ipId}`);
+        const result = await response.json();
+        alert(`Ping result: ${result.status}`);
+        location.reload();  // Reload the page to update the IP status
+    }
+
+    async function pingSubnet(subnetId) {
+        const response = await fetch(`/ping_subnet/${subnetId}`);
+        const result = await response.json();
+        document.getElementById('pingResult').innerText = `Subnet ping result: ${result.status}`;
+        location.reload();  // Reload the page to update the IP statuses
+    }
+
+    async function discoverIPs(subnetId) {
+        const response = await fetch(`/discover_ips/${subnetId}`);
+        const result = await response.json();
+        document.getElementById('pingResult').innerText = `IP discovery result: ${result.status}`;
+        location.reload();  // Reload the page to update the IP statuses
+    }
+</script>
+{% endblock %}

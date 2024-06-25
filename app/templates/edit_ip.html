@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Edit IP Address</h1>
+    <form method="POST" action="{{ url_for('edit_ip', ip_id=ip.id) }}">
+        <div class="form-group">
+            <label for="ip_address">IP Address</label>
+            <input type="text" class="form-control" id="ip_address" name="ip_address" value="{{ ip.ip_address }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description">{{ ip.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="is_active">Is Active</label>
+            <input type="checkbox" id="is_active" name="is_active" {% if ip.is_active %}checked{% endif %}>
+        </div>
+        <div class="form-group">
+            <label for="hostname">Hostname</label>
+            <input type="text" class="form-control" id="hostname" name="hostname" value="{{ ip.hostname }}">
+        </div>
+        <div class="form-group">
+            <label for="mac_address">MAC Address</label>
+            <input type="text" class="form-control" id="mac_address" name="mac_address" value="{{ ip.mac_address }}">
+        </div>
+        <div class="form-group">
+            <label for="rack">Rack</label>
+            <input type="text" class="form-control" id="rack" name="rack" value="{{ ip.rack }}">
+        </div>
+        <div class="form-group">
+            <label for="device">Device</label>
+            <input type="text" class="form-control" id="device" name="device" value="{{ ip.device }}">
+        </div>
+        <div class="form-group">
+            <label for="port">Port</label>
+            <input type="text" class="form-control" id="port" name="port" value="{{ ip.port }}">
+        </div>
+        <div class="form-group">
+            <label for="os">OS</label>
+            <input type="text" class="form-control" id="os" name="os" value="{{ ip.os }}">
+        </div>
+        <div class="form-group">
+            <label for="last_user">Last User</label>
+            <input type="text" class="form-control" id="last_user" name="last_user" value="{{ ip.last_user }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update IP Address</button>
+    </form>
+</div>
+{% endblock %}
